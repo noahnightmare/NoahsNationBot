@@ -1,0 +1,8 @@
+.vscode
+
+/bin/*
+/node_modules/*
+storage/
+
+.eslintrc.json
+config.json
