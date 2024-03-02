@@ -1,6 +1,7 @@
 const { ActivityType } = require('discord.js');
 const Utils = require('../utils.js');
-
+const mongoose = require('mongoose');
+const { mongoURL } = require('../config.json');
 
 module.exports = {
     name: 'ready',
@@ -70,6 +71,17 @@ module.exports = {
 
         // Save the updated giftedLog to the file
         Utils.saveGiftedLog();
+
+        if (!mongoURL) return;
+
+        await mongoose.connect(mongoURL || '');
+
+        if (mongoose.connect) {
+            console.log("Connected to Mongoose Database");
+        }
+        else {
+            console.log("Failed to connect to Mongoose Database");
+        }
 
         console.log('Ready!');
     },
