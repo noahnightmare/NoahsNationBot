@@ -7,7 +7,7 @@ const stickCommand = new SlashCommandBuilder()
     .setName('stick')
     .setDescription('Creates a sticky message in the current channel')
     .addStringOption(option => 
-        option.setName('message')
+        option.setName("message")
         .setDescription('The message you want to stick to the chat.')
         .setRequired(true))
     .addNumberOption(option => 
@@ -20,14 +20,15 @@ const stickCommand = new SlashCommandBuilder()
 
 const handleStickInteraction = async interaction => {
     // Grab initial values from command
-    let string = interaction.options.getString("message");
+    let string = interaction.options.getString("message").replace(/\\n/g, '\n');
     let amount = interaction.options.getNumber('count') || 1;
-
+    
     // Build the sticky message embed
     const embed = new EmbedBuilder()
     .setColor("#000000")
-    .setDescription(string)
-    .setFooter({ text: "Noah's Nation Sticky Messages "})
+    .setTitle("Sticky Message")
+    .setDescription(`${string}`)
+    .setFooter({ text: "Noah's Nation "})
 
     try {
         const data = await stickySchema.findOne({ ChannelID: interaction.channel.id }).exec();

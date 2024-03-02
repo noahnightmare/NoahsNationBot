@@ -33,8 +33,9 @@ module.exports = {
             // Build the sticky message embed
             const embed = new EmbedBuilder()
                 .setColor("#000000")
-                .setDescription(data.Message)
-                .setFooter({ text: "Noah's Nation Sticky Messages" });
+                .setTitle("Sticky Message")
+                .setDescription(`${data.Message}`)
+                .setFooter({ text: "Noah's Nation" });
         
             if (message.channel.id == channel) {
                 data.CurrentCount += 1;
