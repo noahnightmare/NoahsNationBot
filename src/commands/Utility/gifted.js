@@ -26,7 +26,7 @@ const handleGiftedInteraction = async interaction => {
     if (interaction.member.roles.cache.some(role => role.id == Utils.patreonRoleId || role.id == Utils.patreonRoleId2)) {
 
         // Checks if receiver already has gifted
-        if (mentionedMember.roles.cache.has(Utils.giftedroleId)) {
+        if (mentionedMember.roles.cache.has(Utils.giftedRoleId)) {
             await interaction.reply(`${mentionedMember.user.tag} already has the Gifted role.`);
             return;
         }
