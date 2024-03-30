@@ -13,7 +13,7 @@ module.exports = {
             if (giftedUserId === member.id || gifterUserId === member.id) {
                 if (gifterUserId == member.id) {
                     const giftedMember = member.guild.members.cache.get(giftedUserId);
-                    await giftedMember.roles.remove(giftedRoleId);
+                    await giftedMember.roles.remove(Utils.giftedRoleId);
                 }
 
                 // Remove the entry from the gifted log
