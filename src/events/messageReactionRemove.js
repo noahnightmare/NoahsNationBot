@@ -1,5 +1,6 @@
 const { Events, EmbedBuilder } = require('discord.js');
 const starboard = require('../Schemas/starboardSchema.js');
+const Utils = require("../utils.js");
 
 module.exports = {
     name: Events.MessageReactionRemove,
@@ -22,7 +23,11 @@ module.exports = {
             // nullifies if its empty
             const imageUrl = image || null;
 
+            // fixes issues with null profile pictures
+            const authorURL = message.author.avatarURL() !== null ? message.author.avatarURL({ dynamic: true }) : "https://cdn.discordapp.com/embed/avatars/0.png";
+
             if (message.author.id == client.user.id) return;
+            if (Utils.ignoredStarboardChannels.includes(channel)) return;
 
             var newReaction = await message.reactions.cache.find(reaction => reaction.emoji.id === reaction._emoji.id);
 
@@ -48,7 +53,7 @@ module.exports = {
 
                 const embed = new EmbedBuilder()
                     .setColor(foundStar.color)
-                    .setAuthor({ name: `${message.author.username}`, iconURL: `${message.author.avatarURL()}` })
+                    .setAuthor({ name: `${message.author.username}`, iconURL: `${message.author.displayAvatarURL()}` })
                     .setDescription(foundStar.description)
                     .setFooter({ text: `Noah's Nation | ${message.id}`})
                     .setImage(imageUrl)

@@ -1,5 +1,6 @@
 const { Events, EmbedBuilder } = require('discord.js');
 const starboard = require('../Schemas/starboardSchema.js');
+const Utils = require("../utils.js");
 
 module.exports = {
     name: Events.MessageReactionAdd,
@@ -23,6 +24,7 @@ module.exports = {
             const imageUrl = image || null;
 
             if (message.author.id == client.user.id) return;
+            if (Utils.ignoredStarboardChannels.includes(channel)) return;
 
             var newReaction = await message.reactions.cache.find(reaction => reaction.emoji.id === reaction._emoji.id);
 
@@ -37,7 +39,7 @@ module.exports = {
 
                     const embed = new EmbedBuilder()
                         .setColor(foundStar.color)
-                        .setAuthor({ name: `${message.author.username}`, iconURL: `${message.author.avatarURL()}` })
+                        .setAuthor({ name: `${message.author.username}`, iconURL: `${message.author.displayAvatarURL()}` })
                         .setDescription(foundStar.description)
                         .setFooter({ text: `Noah's Nation | ${message.id}`})
                         .setImage(imageUrl)
@@ -51,7 +53,7 @@ module.exports = {
 
                 const embed = new EmbedBuilder()
                 .setColor("#000000")
-                .setAuthor({ name: `${message.author.username}`, iconURL: `${message.author.avatarURL()}` })
+                .setAuthor({ name: `${message.author.username}`, iconURL: `${message.author.displayAvatarURL()}` })
                 .setDescription(`\n${msg} \n\n **[Click to view original message](https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id})**`)
                 .setFooter({ text: `Noah's Nation | ${message.id}`})
                 .setImage(imageUrl)

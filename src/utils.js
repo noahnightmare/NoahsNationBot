@@ -14,6 +14,22 @@ const customRoleCommandRoleId = '1180267154378068048';
 const giftedLogFile = 'src/gifted_log.json';
 const customRoleLogFile = 'src/custom_role_log.json';
 
+const ignoredStarboardChannels = [
+    '1178699849466662925',
+    '1178712415370743928',
+    '1187872325534761040',
+    '1178946972355416145',
+    '1187872875890352178',
+    '1188181177740312590',
+    '1223981132337647616',
+    '1202645211872755722',
+    '1178804895713853490',
+    '1181615777154093138',
+    '1178783996138770432',
+    '1203067883740209232',
+    '1180268049941659668'
+];
+
 let giftedLog = loadGiftedLog(); 
 let customRoleLog = loadCustomRoleLog(); 
 
@@ -75,6 +91,7 @@ module.exports = {
     customRoleCommandRoleId, 
     giftedLogFile, 
     customRoleLogFile, 
+    ignoredStarboardChannels,
     giftedLog, 
     customRoleLog, 
     loadGiftedLog, 
