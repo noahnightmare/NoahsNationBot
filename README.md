@@ -9,9 +9,9 @@ Custom discord bot for custom functionality on the Noah's Nation discord server.
 ``/stick`` - Allows moderators to sticky a message to a channel.  
 ``/unstick`` - Allows moderators to unsticky a message to a channel. 
 
-``/starboard`` : 
-``/starboard check`` - Checks the current status of your starboard.
-``/starboard setup`` - Sets up your starboard in the specified channel with a certain amount of stars needed.
-``/starboard disable`` - Disables your starboard in your server.
-
+``/starboard`` :  
+``/starboard check`` - Checks the current status of your starboard.  
+``/starboard setup`` - Sets up your starboard in the specified channel with a certain amount of stars needed.  
+``/starboard disable`` - Disables your starboard in your server.  
+  
 This bot integrates MongoDB
