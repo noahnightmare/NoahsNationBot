@@ -7,7 +7,7 @@ const stickCommand = new SlashCommandBuilder()
     .setName('unstick')
     .setDescription('Unsticks a sticky message in the current channel')
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
-    .setDMPermission(false)
+    .setDMPermission(false);
     
 
 const handleStickInteraction = async interaction => {

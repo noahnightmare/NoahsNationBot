@@ -15,7 +15,7 @@ const stickCommand = new SlashCommandBuilder()
         .setDescription('How frequently you want the sticky message to be sent.')
         .setRequired(false))
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
-    .setDMPermission(false)
+    .setDMPermission(false);
     
 
 const handleStickInteraction = async interaction => {
