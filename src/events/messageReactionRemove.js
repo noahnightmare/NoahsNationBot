@@ -27,7 +27,7 @@ module.exports = {
             const authorURL = message.author.avatarURL() !== null ? message.author.avatarURL({ dynamic: true }) : "https://cdn.discordapp.com/embed/avatars/0.png";
 
             if (message.author.id == client.user.id) return;
-            if (Utils.ignoredStarboardChannels.includes(channel)) return;
+            if (Utils.ignoredStarboardChannels.includes(channel.id)) return;
 
             var newReaction = await message.reactions.cache.find(reaction => reaction.emoji.id === reaction._emoji.id);
 
