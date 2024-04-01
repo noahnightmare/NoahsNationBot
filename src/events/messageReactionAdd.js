@@ -24,7 +24,7 @@ module.exports = {
             const imageUrl = image || null;
 
             if (message.author.id == client.user.id) return;
-            if (Utils.ignoredStarboardChannels.includes(channel)) return;
+            if (Utils.ignoredStarboardChannels.includes(channel.id)) return;
 
             var newReaction = await message.reactions.cache.find(reaction => reaction.emoji.id === reaction._emoji.id);
 
