@@ -12,10 +12,9 @@ module.exports = {
 
         if (member.roles.cache.some(role => role.id === Utils.ignoredRoleId)) return;
 
-        if (
-            message.channel.id === '1179834903802679427' &&
-            !message.channel.isThread()
-        ) {
+        if (!message) return;
+        
+        if (message.channel.id === '1179834903802679427' && !message.channel.isThread()) {
             await message.react(Utils.customEmoji1);
             await message.react(Utils.customEmoji2);
         }
