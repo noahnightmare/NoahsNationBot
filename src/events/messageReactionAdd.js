@@ -11,7 +11,7 @@ module.exports = {
         var data = await starboard.findOne({ Guild: reaction.message.guildId });
         if (!data) return;
         else {
-            if (reaction._emoji.name !== '⭐') return;
+            if (reaction._emoji.name !== Utils.starboardEmoji) return;
 
             var guild = await client.guilds.cache.get(reaction.message.guildId);
             // channel to send the starboard message to
@@ -23,46 +23,33 @@ module.exports = {
             // nullifies if its empty
             const imageUrl = image || null;
 
-            if (message.author.id == client.user.id) return;
-            if (Utils.ignoredStarboardChannels.includes(channel.id)) return;
+            if (message.author.id === client.user.id || Utils.ignoredStarboardChannels.includes(channel.id)) return;
 
-            var newReaction = await message.reactions.cache.find(reaction => reaction.emoji.id === reaction._emoji.id);
+            const starReaction = await message.reactions.cache.find(reaction => reaction.emoji.name === Utils.starboardEmoji);
+            if (!starReaction || starReaction.count < data.Count) return;
 
-            if (newReaction.count >= data.Count) {
-                var msg = message.content || 'No content available';
-                const fetch = await sendChannel.messages.fetch({ limit: 100 }); 
+            const msg = message.content || 'No content available';
+            const originalMessageLink = `https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`;
 
-                const stars = fetch.find(m => m.embeds.length > 0 && m.embeds[0].footer && m.embeds[0].footer.text.endsWith(message.id)); 
-
-                if (stars) {
-                    const foundStar = stars.embeds[0];
-
-                    const embed = new EmbedBuilder()
-                        .setColor(foundStar.color)
-                        .setAuthor({ name: `${message.author.username}`, iconURL: `${message.author.displayAvatarURL()}` })
-                        .setDescription(foundStar.description)
-                        .setFooter({ text: `Noah's Nation | ${message.id}`})
-                        .setImage(imageUrl)
-                        .setTimestamp();
-
-                    const starMsg = await sendChannel.messages.fetch(stars.id);
-
-                    await starMsg.edit({ content: `**⭐ ${newReaction.count} | ${channel}**`, embeds: [embed] }); 
-                    return;
-                }
-
-                const embed = new EmbedBuilder()
+            const embed = new EmbedBuilder()
                 .setColor("#000000")
                 .setAuthor({ name: `${message.author.username}`, iconURL: `${message.author.displayAvatarURL()}` })
-                .setDescription(`\n${msg} \n\n **[Click to view original message](https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id})**`)
+                .setDescription(`\n${msg} \n\n **[Click to view original message](${originalMessageLink})**`)
                 .setFooter({ text: `Noah's Nation | ${message.id}`})
                 .setImage(imageUrl)
                 .setTimestamp();
 
-                await sendChannel.send({ content: `**⭐ ${newReaction.count} | ${channel}**`, embeds: [embed]})
-                .then(async m => {
-                    await m.react('⭐').catch(err => {});
-                });
+            const starboardMessage = await sendChannel.messages.fetch({ limit: 100 })
+                .then(messages => messages.find(m => m.embeds.length > 0 && m.embeds[0].footer && m.embeds[0].footer.text.endsWith(message.id)));
+
+            if (starboardMessage) {
+                const starMsg = await sendChannel.messages.fetch(starboardMessage.id);
+                await starMsg.edit({ content: `**${Utils.starboardEmoji} ${starReaction.count} | ${channel}**`, embeds: [embed] });
+            } else {
+                await sendChannel.send({ content: `**${Utils.starboardEmoji} ${starReaction.count} | ${channel}**`, embeds: [embed] })
+                    .then(async m => {
+                        await m.react(Utils.starboardEmoji).catch(err => {});
+                    });
             }
         }
     },

@@ -14,6 +14,8 @@ const customRoleCommandRoleId = '1180267154378068048';
 const giftedLogFile = 'src/gifted_log.json';
 const customRoleLogFile = 'src/custom_role_log.json';
 
+const starboardEmoji = '⭐';
+
 const ignoredStarboardChannels = [
     '1178699849466662925',
     '1178712415370743928',
@@ -92,6 +94,7 @@ module.exports = {
     giftedLogFile, 
     customRoleLogFile, 
     ignoredStarboardChannels,
+    starboardEmoji,
     giftedLog, 
     customRoleLog, 
     loadGiftedLog, 
