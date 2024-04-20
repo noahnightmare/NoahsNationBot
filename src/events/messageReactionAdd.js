@@ -25,8 +25,10 @@ module.exports = {
 
             if (message.author.id === client.user.id || Utils.ignoredStarboardChannels.includes(channel.id)) return;
 
-            const starReaction = await message.reactions.cache.find(reaction => reaction.emoji.name === Utils.starboardEmoji);
-            if (!starReaction || starReaction.count < data.Count) return;
+            if (reaction.emoji.name !== Utils.starboardEmoji) return;
+
+            var starReaction = await message.reactions.cache.find(reaction => reaction.emoji.name === Utils.starboardEmoji);
+            if (starReaction.count < data.Count) return;
 
             const msg = message.content || 'No content available';
             const originalMessageLink = `https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`;
