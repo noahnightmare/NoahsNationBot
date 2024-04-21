@@ -3,6 +3,15 @@ const starboard = require('../Schemas/starboardSchema.js');
 const Utils = require("../utils.js");
 const _ = require('lodash'); // required to halt execution until its stopped being called
 
+// checks if anything is attached to the message
+function extension(reaction, attachment) {
+    const imageLink = attachment.split(".");
+    const typeOfImage = imageLink[imageLink.length - 1];
+    const image = /(jpg|jpeg|png|gif)/gi.test(typeOfImage);
+    if (!image) return "";
+    return attachment;
+}
+
 const debouncedExecute = _.debounce(async (reaction, user, client) => {
     if (!reaction.message.guildId) return;
 
@@ -17,7 +26,7 @@ const debouncedExecute = _.debounce(async (reaction, user, client) => {
             // channel where the reaction was logged
             var channel = await guild.channels.fetch(reaction.message.channelId);
             var message = await channel.messages.fetch(reaction.message.id);
-            const image = message.attachments.size > 0 ? await this.extension(reaction, message.attachments.first().url) : ""; 
+            const image = message.attachments.size > 0 ? await extension(reaction, message.attachments.first().url) : ""; 
             // nullifies if its empty
             const imageUrl = image || null;
 
@@ -59,14 +68,5 @@ module.exports = {
     async execute (reaction, user, client) {
         debouncedExecute(reaction, user, client);
     },
-
-    // checks if anything is attached to the message
-    extension(reaction, attachment) {
-        const imageLink = attachment.split(".");
-        const typeOfImage = imageLink[imageLink.length - 1];
-        const image = /(jpg|jpeg|png|gif)/gi.test(typeOfImage);
-        if (!image) return "";
-        return attachment;
-    }
 }
 
