@@ -27,7 +27,7 @@ const handleGiftedInteraction = async interaction => {
 
         // Checks if receiver already has gifted
         if (mentionedMember.roles.cache.has(Utils.giftedRoleId)) {
-            await interaction.reply(`${mentionedMember.user.tag} already has the Gifted role.`);
+            await interaction.reply(`**${mentionedMember.user.displayName}** already has the Gifted role.`);
             return;
         }
 
@@ -58,7 +58,7 @@ const handleGiftedInteraction = async interaction => {
         Utils.saveGiftedLog();
 
         // Send a message to the channel notifying the new user
-        await interaction.reply(`${interaction.user.toString()} has given the Gifted role to ${mentionedMember.toString()}!`);
+        await interaction.reply(`🎁 ${interaction.user.toString()} has given the Gifted role to ${mentionedMember.toString()}!`);
     }
     else { await interaction.reply('You do not have the required role to use this command.'); }
 };

@@ -1,12 +1,10 @@
 const { Events, EmbedBuilder } = require('discord.js');
 const starboard = require('../Schemas/starboardSchema.js');
 const Utils = require("../utils.js");
+const _ = require('lodash'); // required to halt execution until its stopped being called
 
-module.exports = {
-    name: Events.MessageReactionAdd,
-    async execute (reaction, user, client) {
-
-        if (!reaction.message.guildId) return;
+const debouncedExecute = _.debounce(async (reaction, user, client) => {
+    if (!reaction.message.guildId) return;
 
         var data = await starboard.findOne({ Guild: reaction.message.guildId });
         if (!data) return;
@@ -51,9 +49,15 @@ module.exports = {
                 await sendChannel.send({ content: `**${Utils.starboardEmoji} ${starReaction.count} | ${channel}**`, embeds: [embed] })
                     .then(async m => {
                         await m.react(Utils.starboardEmoji).catch(err => {});
-                    });
-            }
+            });
         }
+    }
+}, 1000);
+
+module.exports = {
+    name: Events.MessageReactionAdd,
+    async execute (reaction, user, client) {
+        debouncedExecute(reaction, user, client);
     },
 
     // checks if anything is attached to the message
