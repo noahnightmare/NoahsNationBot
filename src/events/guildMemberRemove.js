@@ -22,5 +22,20 @@ module.exports = {
                 Utils.saveGiftedLog();
             }
         }
+
+        for (const customRoleUserId in Utils.customRoleLog) {
+            const customRoleId = Utils.customRoleLog[customRoleUserId];
+
+            if (customRoleUserId === member.id) {
+                const customRole = await member.guild.roles.fetch(customRoleId);
+                if (customRole) {
+                    customRole.delete();
+                }
+            }
+
+            delete Utils.customRoleLog[customRoleUserId];
+
+            Utils.saveCustomRoleLog();
+        }
     },
 };
