@@ -31,11 +31,13 @@ module.exports = {
                 if (customRole) {
                     customRole.delete();
                 }
+
+                delete Utils.customRoleLog[customRoleUserId];
+                
+                Utils.saveCustomRoleLog();
             }
 
-            delete Utils.customRoleLog[customRoleUserId];
-
-            Utils.saveCustomRoleLog();
+            
         }
     },
 };
