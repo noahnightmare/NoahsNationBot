@@ -14,51 +14,54 @@ function extension(reaction, attachment) {
 
 const debouncedExecute = _.debounce(async (reaction, user, client) => {
     if (!reaction.message.guildId) return;
+    if (!reaction.message) return;
 
-        var data = await starboard.findOne({ Guild: reaction.message.guildId });
-        if (!data) return;
-        else {
-            if (reaction._emoji.name !== Utils.starboardEmoji) return;
+    var data = await starboard.findOne({ Guild: reaction.message.guildId });
+    if (!data) return;
+    else {
+        if (reaction._emoji.name !== Utils.starboardEmoji) return;
 
-            var guild = await client.guilds.cache.get(reaction.message.guildId);
-            // channel to send the starboard message to
-            var sendChannel = await guild.channels.fetch(data.Channel);
-            // channel where the reaction was logged
-            var channel = await guild.channels.fetch(reaction.message.channelId);
-            var message = await channel.messages.fetch(reaction.message.id);
-            const image = message.attachments.size > 0 ? await extension(reaction, message.attachments.first().url) : ""; 
-            // nullifies if its empty
-            const imageUrl = image || null;
+        var guild = await client.guilds.cache.get(reaction.message.guildId);
+        // channel to send the starboard message to
+        var sendChannel = await guild.channels.fetch(data.Channel);
+        // channel where the reaction was logged
+        var channel = await guild.channels.fetch(reaction.message.channelId);
+        var message = await channel.messages.fetch(reaction.message.id);
+        const image = message.attachments.size > 0 ? await extension(reaction, message.attachments.first().url) : ""; 
+        // nullifies if its empty
+        const imageUrl = image || null;
 
-            if (message.author.id === client.user.id || Utils.ignoredStarboardChannels.includes(channel.id)) return;
+        if (!message) return;
 
-            if (reaction.emoji.name !== Utils.starboardEmoji) return;
+        if (message.author.id === client.user.id || Utils.ignoredStarboardChannels.includes(channel.id)) return;
 
-            var starReaction = await message.reactions.cache.find(reaction => reaction.emoji.name === Utils.starboardEmoji);
-            if (starReaction.count < data.Count) return;
+        if (reaction.emoji.name !== Utils.starboardEmoji) return;
 
-            const msg = message.content || 'No content available';
-            const originalMessageLink = `https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`;
+        var starReaction = await message.reactions.cache.find(reaction => reaction.emoji.name === Utils.starboardEmoji);
+        if (starReaction.count < data.Count) return;
 
-            const embed = new EmbedBuilder()
-                .setColor("#000000")
-                .setAuthor({ name: `${message.author.username}`, iconURL: `${message.author.displayAvatarURL()}` })
-                .setDescription(`\n${msg} \n\n **[Click to view original message](${originalMessageLink})**`)
-                .setFooter({ text: `Noah's Nation | ${message.id}`})
-                .setImage(imageUrl)
-                .setTimestamp();
+        const msg = message.content || 'No content available';
+        const originalMessageLink = `https://discord.com/channels/${message.guild.id}/${message.channel.id}/${message.id}`;
 
-            const starboardMessage = await sendChannel.messages.fetch({ limit: 100 })
-                .then(messages => messages.find(m => m.embeds.length > 0 && m.embeds[0].footer && m.embeds[0].footer.text.endsWith(message.id)));
+        const embed = new EmbedBuilder()
+            .setColor("#000000")
+            .setAuthor({ name: `${message.author.username}`, iconURL: `${message.author.displayAvatarURL()}` })
+            .setDescription(`\n${msg} \n\n **[Click to view original message](${originalMessageLink})**`)
+            .setFooter({ text: `Noah's Nation | ${message.id}`})
+            .setImage(imageUrl)
+            .setTimestamp();
 
-            if (starboardMessage) {
-                const starMsg = await sendChannel.messages.fetch(starboardMessage.id);
-                await starMsg.edit({ content: `**${Utils.starboardEmoji} ${starReaction.count} | ${channel}**`, embeds: [embed] });
-            } else {
-                await sendChannel.send({ content: `**${Utils.starboardEmoji} ${starReaction.count} | ${channel}**`, embeds: [embed] })
-                    .then(async m => {
-                        await m.react(Utils.starboardEmoji).catch(err => {});
-            });
+        const starboardMessage = await sendChannel.messages.fetch({ limit: 100 })
+            .then(messages => messages.find(m => m.embeds.length > 0 && m.embeds[0].footer && m.embeds[0].footer.text.endsWith(message.id)));
+
+        if (starboardMessage) {
+            const starMsg = await sendChannel.messages.fetch(starboardMessage.id);
+            await starMsg.edit({ content: `**${Utils.starboardEmoji} ${starReaction.count} | ${channel}**`, embeds: [embed] });
+        } else {
+            await sendChannel.send({ content: `**${Utils.starboardEmoji} ${starReaction.count} | ${channel}**`, embeds: [embed] })
+                .then(async m => {
+                    await m.react(Utils.starboardEmoji).catch(err => {});
+        });
         }
     }
 }, 1000);
